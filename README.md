@@ -2,8 +2,8 @@
 
 Just goofing around for now.
 
-So far built an 8bit and 16bit min hasher that meets the hash.Hash interface. It has good unit test coverage and a fuzz test.
+This library provides 8-, 16-, 32, and 64-bit Min Hashers. MinHash implements the hash.Hash interface. It has good unit test coverage and a fuzz test.
 
-Next up, 32, 64 bit.
+It needs a bit of refactoring, and further testing.
 
 Then some experimenting.
