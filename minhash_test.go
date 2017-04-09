@@ -83,3 +83,18 @@ func TestFuzz(t *testing.T) {
 		t.Error("Fuzz returned unexpected result")
 	}
 }
+
+func BenchmarkMinHash8(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		mh := New8(128)
+		mh.Write([]byte("testing"))
+	}
+}
+
+func BenchmarkMinHash16(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		mh := New16(128)
+		mh.Write([]byte("testing"))
+	}
+}
+

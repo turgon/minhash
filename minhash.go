@@ -68,6 +68,7 @@ func (mh MinHash8) Write(data []byte) (int, error) {
 
 	return len(data), nil
 }
+
 func (mh MinHash16) Write(data []byte) (int, error) {
 	h := fnv.New32a()
 	h.Write(data)
