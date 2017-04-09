@@ -2,13 +2,13 @@ package minhash
 
 import (
 	"hash"
-	"bytes"
 	"testing"
 )
 
 func TestMinHash8(t *testing.T) { testMinHash(New8, 4, t) }
 func TestMinHash16(t *testing.T) { testMinHash(New16, 2, t) }
 func TestMinHash32(t *testing.T) { testMinHash(New32, 1, t) }
+func TestMinHash64(t *testing.T) { testMinHash(New64, 1, t) }
 
 func testMinHash(mhf newFn, l int, t *testing.T) {
 	var x, b []byte
@@ -18,8 +18,10 @@ func testMinHash(mhf newFn, l int, t *testing.T) {
 	b = make([]byte, 0)
 	x = mh.Sum(b)
 
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
+	for i := 0; i < len(x); i++ {
+		if x[i] != 255 {
+			t.Error("Sum returned unexpected results", x)
+		}
 	}
 
 	mh.Write([]byte("test"))
@@ -29,8 +31,10 @@ func testMinHash(mhf newFn, l int, t *testing.T) {
 	b = make([]byte, 0)
 	x = mh.Sum(b)
 
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
+	for i := 0; i < len(x); i++ {
+		if x[i] != 255 {
+			t.Error("Sum returned unexpected results", x)
+		}
 	}
 
 	if mh.BlockSize() != 1 {
@@ -60,6 +64,7 @@ var resulth hash.Hash
 func BenchmarkNewMinHash8(b *testing.B) { benchmarkNewMinHash(New8, b) }
 func BenchmarkNewMinHash16(b *testing.B) { benchmarkNewMinHash(New16, b) }
 func BenchmarkNewMinHash32(b *testing.B) { benchmarkNewMinHash(New32, b) }
+func BenchmarkNewMinHash64(b *testing.B) { benchmarkNewMinHash(New64, b) }
 
 func benchmarkNewMinHash(mhf newFn, b *testing.B) {
 	var mh hash.Hash
@@ -72,6 +77,7 @@ func benchmarkNewMinHash(mhf newFn, b *testing.B) {
 func BenchmarkMinHash8(b *testing.B) { benchmarkMinHash(New8(128), b) }
 func BenchmarkMinHash16(b *testing.B) { benchmarkMinHash(New16(128), b) }
 func BenchmarkMinHash32(b *testing.B) { benchmarkMinHash(New32(128), b) }
+func BenchmarkMinHash64(b *testing.B) { benchmarkMinHash(New64(128), b) }
 
 var result int
 
