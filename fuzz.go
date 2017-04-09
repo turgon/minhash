@@ -14,5 +14,8 @@ func Fuzz(data []byte) int {
 	mh16 := New16(sz)
 	mh16.Write(data)
 
+	mh32 := New32(sz)
+	mh32.Write(data)
+
 	return 0
 }
