@@ -6,77 +6,14 @@ import (
 	"testing"
 )
 
-func TestMinHash8(t *testing.T) {
+func TestMinHash8(t *testing.T) { testMinHash(New8, 4, t) }
+func TestMinHash16(t *testing.T) { testMinHash(New16, 2, t) }
+func TestMinHash32(t *testing.T) { testMinHash(New32, 1, t) }
+
+func testMinHash(mhf newFn, l int, t *testing.T) {
 	var x, b []byte
-	var l int = 4
 
-	mh := New8(l)
-
-	b = make([]byte, 0)
-	x = mh.Sum(b)
-
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
-	}
-
-	mh.Write([]byte("test"))
-
-	mh.Reset()
-
-	b = make([]byte, 0)
-	x = mh.Sum(b)
-
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
-	}
-
-	if mh.BlockSize() != 1 {
-		t.Error("BlockSize returned unexpected result")
-	}
-
-	if mh.Size() != l {
-		t.Error("Size returned unexpected result")
-	}
-}
-
-func TestMinHash16(t *testing.T) {
-	var x, b []byte
-	var l int = 2
-
-	mh := New16(l)
-
-	b = make([]byte, 0)
-	x = mh.Sum(b)
-
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
-	}
-
-	mh.Write([]byte("test"))
-
-	mh.Reset()
-
-	b = make([]byte, 0)
-	x = mh.Sum(b)
-
-	if !bytes.Equal(x, []byte{255, 255, 255, 255}) {
-		t.Error("Sum returned unexpected results", x)
-	}
-
-	if mh.BlockSize() != 1 {
-		t.Error("BlockSize returned unexpected result")
-	}
-
-	if mh.Size() != l {
-		t.Error("Size returned unexpected result")
-	}
-}
-
-func TestMinHash32(t *testing.T) {
-	var x, b []byte
-	var l int = 1
-
-	mh := New32(l)
+	mh := mhf(l)
 
 	b = make([]byte, 0)
 	x = mh.Sum(b)
