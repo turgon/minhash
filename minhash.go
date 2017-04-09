@@ -14,33 +14,25 @@ type MinHash64 []uint64
 
 func New8(sz int) hash.Hash {
 	n := make(MinHash8, sz)
-	for i := 0; i < sz; i++ {
-		n[i] = 255
-	}
+	n.Reset()
 	return &n
 }
 
 func New16(sz int) hash.Hash {
 	n := make(MinHash16, sz)
-	for i := 0; i < sz; i++ {
-		n[i] = 65535
-	}
+	n.Reset()
 	return &n
 }
 
 func New32(sz int) hash.Hash {
 	n := make(MinHash32, sz)
-	for i := 0; i < sz; i++ {
-		n[i] = 4294967295
-	}
+	n.Reset()
 	return &n
 }
 
 func New64(sz int) hash.Hash {
 	n := make(MinHash64, sz)
-	for i := 0; i < sz; i++ {
-		n[i] = 18446744073709551615
-	}
+	n.Reset()
 	return &n
 }
 
@@ -99,11 +91,9 @@ func (mh MinHash64) Sum(in []byte) []byte {
 func (mh MinHash8) Write(data []byte) (int, error) {
 	h := fnv.New32a()
 	h.Write(data)
-	s := make([]byte, 0)
-	s = h.Sum(s)
 
-	v1 := uint8(s[0])
-	v2 := uint8(s[1])
+	v1 := uint8(h.Sum32())
+	v2 := uint8(h.Sum32() >> 8)
 
 	for i := 0; i < len(mh); i++ {
 		x := v1 + uint8(i)*v2
@@ -118,11 +108,9 @@ func (mh MinHash8) Write(data []byte) (int, error) {
 func (mh MinHash16) Write(data []byte) (int, error) {
 	h := fnv.New32a()
 	h.Write(data)
-	s := make([]byte, 0)
-	s = h.Sum(s)
 
-	v1 := uint16(s[0] << 8) + uint16(s[1])
-	v2 := uint16(s[2] << 8) + uint16(s[3])
+	v1 := uint16(h.Sum32())
+	v2 := uint16(h.Sum32() >> 16)
 
 	for i := 0; i < len(mh); i++ {
 		x := v1 + uint16(i)*v2
@@ -137,10 +125,9 @@ func (mh MinHash16) Write(data []byte) (int, error) {
 func (mh MinHash32) Write(data []byte) (int, error) {
 	h := fnv.New64a()
 	h.Write(data)
-	s := h.Sum64()
 
-	v1 := uint32(s)
-	v2 := uint32(s >> 32)
+	v1 := uint32(h.Sum64())
+	v2 := uint32(h.Sum64() >> 32)
 
 	for i := 0; i < len(mh); i++ {
 		x := v1 + uint32(i)*v2
