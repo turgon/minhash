@@ -5,15 +5,13 @@ import (
 	"testing"
 )
 
-func TestMinHash8(t *testing.T) { testMinHash(New8, 4, t) }
-func TestMinHash16(t *testing.T) { testMinHash(New16, 2, t) }
-func TestMinHash32(t *testing.T) { testMinHash(New32, 1, t) }
-func TestMinHash64(t *testing.T) { testMinHash(New64, 1, t) }
+func TestMinHash8(t *testing.T) { testMinHash(New8(4), 4, t) }
+func TestMinHash16(t *testing.T) { testMinHash(New16(2), 2, t) }
+func TestMinHash32(t *testing.T) { testMinHash(New32(1), 1, t) }
+func TestMinHash64(t *testing.T) { testMinHash(New64(1), 1, t) }
 
-func testMinHash(mhf newFn, l int, t *testing.T) {
+func testMinHash(mh hash.Hash, l int, t *testing.T) {
 	var x, b []byte
-
-	mh := mhf(l)
 
 	b = make([]byte, 0)
 	x = mh.Sum(b)
@@ -46,6 +44,21 @@ func testMinHash(mhf newFn, l int, t *testing.T) {
 	}
 }
 
+func TestLess(t *testing.T) {
+	l := 8
+	mh8 := New8(l)
+
+	mh8.Write([]byte("testing"))
+
+	if !mh8.LessThan(New8(l)) {
+		t.Error("Less failed")
+	}
+
+	if New8(l).LessThan(mh8) {
+		t.Error("Less failed")
+	}
+}
+
 func TestFuzz(t *testing.T) {
 	b := make([]byte, 0)
 	if Fuzz(b) != -1 {
@@ -61,15 +74,34 @@ func TestFuzz(t *testing.T) {
 
 var resulth hash.Hash
 
-func BenchmarkNewMinHash8(b *testing.B) { benchmarkNewMinHash(New8, b) }
-func BenchmarkNewMinHash16(b *testing.B) { benchmarkNewMinHash(New16, b) }
-func BenchmarkNewMinHash32(b *testing.B) { benchmarkNewMinHash(New32, b) }
-func BenchmarkNewMinHash64(b *testing.B) { benchmarkNewMinHash(New64, b) }
-
-func benchmarkNewMinHash(mhf newFn, b *testing.B) {
+func BenchmarkNewMinHash8(b *testing.B) {
 	var mh hash.Hash
 	for n := 0; n < b.N; n++ {
-		mh = mhf(128)
+		mh = New8(128)
+	}
+	resulth = mh
+}
+
+func BenchmarkNewMinHash16(b *testing.B) {
+	var mh hash.Hash
+	for n := 0; n < b.N; n++ {
+		mh = New16(128)
+	}
+	resulth = mh
+}
+
+func BenchmarkNewMinHash32(b *testing.B) {
+	var mh hash.Hash
+	for n := 0; n < b.N; n++ {
+		mh = New32(128)
+	}
+	resulth = mh
+}
+
+func BenchmarkNewMinHash64(b *testing.B) {
+	var mh hash.Hash
+	for n := 0; n < b.N; n++ {
+		mh = New64(128)
 	}
 	resulth = mh
 }

@@ -1,39 +1,36 @@
 package minhash
 
 import (
-	"hash"
 	"hash/fnv"
 )
-
-type newFn func(int) hash.Hash
 
 type MinHash8 []uint8
 type MinHash16 []uint16
 type MinHash32 []uint32
 type MinHash64 []uint64
 
-func New8(sz int) hash.Hash {
+func New8(sz int) MinHash8 {
 	n := make(MinHash8, sz)
 	n.Reset()
-	return &n
+	return n
 }
 
-func New16(sz int) hash.Hash {
+func New16(sz int) MinHash16 {
 	n := make(MinHash16, sz)
 	n.Reset()
-	return &n
+	return n
 }
 
-func New32(sz int) hash.Hash {
+func New32(sz int) MinHash32 {
 	n := make(MinHash32, sz)
 	n.Reset()
-	return &n
+	return n
 }
 
-func New64(sz int) hash.Hash {
+func New64(sz int) MinHash64 {
 	n := make(MinHash64, sz)
 	n.Reset()
-	return &n
+	return n
 }
 
 func (mh MinHash8) Reset() {
@@ -168,3 +165,39 @@ func (mh MinHash8) Size() int { return len(mh) }
 func (mh MinHash16) Size() int { return len(mh) }
 func (mh MinHash32) Size() int { return len(mh) }
 func (mh MinHash64) Size() int { return len(mh) }
+
+func (mh MinHash8) LessThan(o MinHash8) bool {
+	for i := 0; i < len(o); i++ {
+		if mh[i] > o[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (mh MinHash16) LessThan(o MinHash16) bool {
+	for i := 0; i < len(o); i++ {
+		if mh[i] > o[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (mh MinHash32) LessThan(o MinHash32) bool {
+	for i := 0; i < len(o); i++ {
+		if mh[i] > o[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (mh MinHash64) LessThan(o MinHash64) bool {
+	for i := 0; i < len(o); i++ {
+		if mh[i] > o[i] {
+			return false
+		}
+	}
+	return true
+}
