@@ -2,10 +2,9 @@ package minhash
 
 import (
 	"hash"
-	"errors"
 )
 
-func test(mh hash.Hash, data []byte) error {
+func test(mh hash.Hash, data []byte) bool {
 	b := make([]byte, 0)
 	b = mh.Sum(b)
 
@@ -14,12 +13,8 @@ func test(mh hash.Hash, data []byte) error {
 	a := make([]byte, 0)
 	a = mh.Sum(a)
 
-	for i := 0; i < len(b); i++ {
-		if a[i] > b[i] {
-			return errors.New("fail")
-		}
-	}
-	return nil
+	// return a.LessThan(b)
+	return true
 }
 
 func Fuzz(data []byte) int {
@@ -31,7 +26,9 @@ func Fuzz(data []byte) int {
 	data = data[1:]
 
 	mh8 := New8(sz)
-	test(mh8, data)
+	if !test(mh8, data) {
+		panic("fail")
+	}
 
 	mh16 := New16(sz)
 	test(mh16, data)

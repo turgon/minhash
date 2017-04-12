@@ -57,6 +57,60 @@ func TestLess(t *testing.T) {
 	if New8(l).LessThan(mh8) {
 		t.Error("Less failed")
 	}
+
+	mh16 := New16(l)
+
+	mh16.Write([]byte("testing"))
+
+	if !mh16.LessThan(New16(l)) {
+		t.Error("Less failed")
+	}
+
+	if New16(l).LessThan(mh16) {
+		t.Error("Less failed")
+	}
+
+	mh32 := New32(l)
+
+	mh32.Write([]byte("testing"))
+
+	if !mh32.LessThan(New32(l)) {
+		t.Error("Less failed")
+	}
+
+	if New32(l).LessThan(mh32) {
+		t.Error("Less failed")
+	}
+
+	mh64 := New64(l)
+
+	mh64.Write([]byte("testing"))
+
+	if !mh64.LessThan(New64(l)) {
+		t.Error("Less failed")
+	}
+
+	if New64(l).LessThan(mh64) {
+		t.Error("Less failed")
+	}
+}
+
+func TestSimilarity(t *testing.T) {
+	mh8 := New8(10)
+	mh8x := New8(10)
+
+	mh8.Write([]byte("test"))
+	if match := mh8.Similarity(mh8x); match != 0 {
+		t.Error("Similarity returned unexpected results:", match)
+	}
+	mh8x.Write([]byte("test"))
+	if match := mh8.Similarity(mh8x); match != 10 {
+		t.Error("Similarity returned unexpected results:", match)
+	}
+	mh8x.Write([]byte("other thing"))
+	if match := mh8.Similarity(mh8x); match == 10 || match == 0 {
+		t.Error("Similarity returned unexpected results:", match)
+	}
 }
 
 func TestFuzz(t *testing.T) {

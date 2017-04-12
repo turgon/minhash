@@ -201,3 +201,14 @@ func (mh MinHash64) LessThan(o MinHash64) bool {
 	}
 	return true
 }
+
+func (mh MinHash8) Similarity(o MinHash8) int {
+	x := 0
+	for i := 0; i < len(o); i++ {
+		if mh[i] == o[i] {
+			x += 1
+		}
+	}
+	return x
+}
+
