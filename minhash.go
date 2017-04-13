@@ -211,8 +211,9 @@ func (mh MinHash64) LessThan(o MinHasher) bool {
 
 func (mh MinHash8) Similarity(o MinHasher) int {
 	x := 0
-	for i := 0; i < o.Size(); i++ {
-		if mh[i] == o.(MinHash8)[i] {
+	var p MinHash8 = o.(MinHash8)
+	for i := 0; i < p.Size(); i++ {
+		if mh[i] == p[i] {
 			x += 1
 		}
 	}
@@ -221,8 +222,9 @@ func (mh MinHash8) Similarity(o MinHasher) int {
 
 func (mh MinHash16) Similarity(o MinHasher) int {
 	x := 0
-	for i := 0; i < o.Size(); i++ {
-		if mh[i] == o.(MinHash16)[i] {
+	var p MinHash16 = o.(MinHash16)
+	for i := 0; i < p.Size(); i++ {
+		if mh[i] == p[i] {
 			x += 1
 		}
 	}
@@ -231,8 +233,9 @@ func (mh MinHash16) Similarity(o MinHasher) int {
 
 func (mh MinHash32) Similarity(o MinHasher) int {
 	x := 0
-	for i := 0; i < o.Size(); i++ {
-		if mh[i] == o.(MinHash32)[i] {
+	var p MinHash32 = o.(MinHash32)
+	for i := 0; i < p.Size(); i++ {
+		if mh[i] == p[i] {
 			x += 1
 		}
 	}
@@ -241,8 +244,9 @@ func (mh MinHash32) Similarity(o MinHasher) int {
 
 func (mh MinHash64) Similarity(o MinHasher) int {
 	x := 0
-	for i := 0; i < o.Size(); i++ {
-		if mh[i] == o.(MinHash64)[i] {
+	var p MinHash64 = o.(MinHash64)
+	for i := 0; i < p.Size(); i++ {
+		if mh[i] == p[i] {
 			x += 1
 		}
 	}

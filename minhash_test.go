@@ -145,3 +145,25 @@ func benchmarkMinHash(mh hash.Hash, b *testing.B) {
 	result = r
 }
 
+func BenchmarkSimilarity8(b *testing.B) { benchmarkSimilarity(New8(128), New8(128), b) }
+func BenchmarkSimilarity16(b *testing.B) { benchmarkSimilarity(New16(128), New16(128), b) }
+func BenchmarkSimilarity32(b *testing.B) { benchmarkSimilarity(New32(128), New32(128), b) }
+func BenchmarkSimilarity64(b *testing.B) { benchmarkSimilarity(New64(128), New64(128), b) }
+
+var answer int
+
+func benchmarkSimilarity(first, second MinHasher, b *testing.B) {
+	var r int
+
+	b.StopTimer()
+	r, _ = first.Write([]byte("testing"))
+	r, _ = second.Write([]byte("testing"))
+	r, _ = second.Write([]byte("testing2"))
+	b.StartTimer()
+
+	for n := 0; n < b.N; n++ {
+		r = first.Similarity(second)
+	}
+	answer = r
+}
+
