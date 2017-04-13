@@ -1,6 +1,7 @@
 package minhash
 
 import (
+	"hash"
 	"hash/fnv"
 )
 
@@ -8,6 +9,12 @@ type MinHash8 []uint8
 type MinHash16 []uint16
 type MinHash32 []uint32
 type MinHash64 []uint64
+
+type MinHasher interface {
+	hash.Hash
+	Similarity(MinHasher) int
+	LessThan(MinHasher) bool
+}
 
 func New8(sz int) MinHash8 {
 	n := make(MinHash8, sz)
@@ -166,49 +173,78 @@ func (mh MinHash16) Size() int { return len(mh) }
 func (mh MinHash32) Size() int { return len(mh) }
 func (mh MinHash64) Size() int { return len(mh) }
 
-func (mh MinHash8) LessThan(o MinHash8) bool {
-	for i := 0; i < len(o); i++ {
-		if mh[i] > o[i] {
+func (mh MinHash8) LessThan(o MinHasher) bool {
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] > o.(MinHash8)[i] {
 			return false
 		}
 	}
 	return true
 }
 
-func (mh MinHash16) LessThan(o MinHash16) bool {
-	for i := 0; i < len(o); i++ {
-		if mh[i] > o[i] {
+func (mh MinHash16) LessThan(o MinHasher) bool {
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] > o.(MinHash16)[i] {
 			return false
 		}
 	}
 	return true
 }
 
-func (mh MinHash32) LessThan(o MinHash32) bool {
-	for i := 0; i < len(o); i++ {
-		if mh[i] > o[i] {
+func (mh MinHash32) LessThan(o MinHasher) bool {
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] > o.(MinHash32)[i] {
 			return false
 		}
 	}
 	return true
 }
 
-func (mh MinHash64) LessThan(o MinHash64) bool {
-	for i := 0; i < len(o); i++ {
-		if mh[i] > o[i] {
+func (mh MinHash64) LessThan(o MinHasher) bool {
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] > o.(MinHash64)[i] {
 			return false
 		}
 	}
 	return true
 }
 
-func (mh MinHash8) Similarity(o MinHash8) int {
+func (mh MinHash8) Similarity(o MinHasher) int {
 	x := 0
-	for i := 0; i < len(o); i++ {
-		if mh[i] == o[i] {
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] == o.(MinHash8)[i] {
 			x += 1
 		}
 	}
 	return x
 }
 
+func (mh MinHash16) Similarity(o MinHasher) int {
+	x := 0
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] == o.(MinHash16)[i] {
+			x += 1
+		}
+	}
+	return x
+}
+
+func (mh MinHash32) Similarity(o MinHasher) int {
+	x := 0
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] == o.(MinHash32)[i] {
+			x += 1
+		}
+	}
+	return x
+}
+
+func (mh MinHash64) Similarity(o MinHasher) int {
+	x := 0
+	for i := 0; i < o.Size(); i++ {
+		if mh[i] == o.(MinHash64)[i] {
+			x += 1
+		}
+	}
+	return x
+}

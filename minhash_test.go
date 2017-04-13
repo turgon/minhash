@@ -44,71 +44,40 @@ func testMinHash(mh hash.Hash, l int, t *testing.T) {
 	}
 }
 
-func TestLess(t *testing.T) {
-	l := 8
-	mh8 := New8(l)
+func TestLessThan8(t *testing.T) { testLessThan(New8(8), New8(8), t) }
+func TestLessThan16(t *testing.T) { testLessThan(New16(8), New16(8), t) }
+func TestLessThan32(t *testing.T) { testLessThan(New32(8), New32(8), t) }
+func TestLessThan64(t *testing.T) { testLessThan(New64(8), New64(8), t) }
 
-	mh8.Write([]byte("testing"))
+func testLessThan(first, second MinHasher, t *testing.T) {
+	first.Write([]byte("testing"))
 
-	if !mh8.LessThan(New8(l)) {
-		t.Error("Less failed")
+	if !first.LessThan(second) {
+		t.Error("LessThan failed")
 	}
 
-	if New8(l).LessThan(mh8) {
-		t.Error("Less failed")
-	}
-
-	mh16 := New16(l)
-
-	mh16.Write([]byte("testing"))
-
-	if !mh16.LessThan(New16(l)) {
-		t.Error("Less failed")
-	}
-
-	if New16(l).LessThan(mh16) {
-		t.Error("Less failed")
-	}
-
-	mh32 := New32(l)
-
-	mh32.Write([]byte("testing"))
-
-	if !mh32.LessThan(New32(l)) {
-		t.Error("Less failed")
-	}
-
-	if New32(l).LessThan(mh32) {
-		t.Error("Less failed")
-	}
-
-	mh64 := New64(l)
-
-	mh64.Write([]byte("testing"))
-
-	if !mh64.LessThan(New64(l)) {
-		t.Error("Less failed")
-	}
-
-	if New64(l).LessThan(mh64) {
-		t.Error("Less failed")
+	if second.LessThan(first) {
+		t.Error("LessThan failed")
 	}
 }
 
-func TestSimilarity(t *testing.T) {
-	mh8 := New8(10)
-	mh8x := New8(10)
+func TestSimilarity8(t *testing.T) { testSimilarity(New8(10), New8(10), t) }
+func TestSimilarity16(t *testing.T) { testSimilarity(New16(10), New16(10), t) }
+func TestSimilarity32(t *testing.T) { testSimilarity(New32(10), New32(10), t) }
+func TestSimilarity64(t *testing.T) { testSimilarity(New64(10), New64(10), t) }
 
-	mh8.Write([]byte("test"))
-	if match := mh8.Similarity(mh8x); match != 0 {
+func testSimilarity(first, second MinHasher, t *testing.T) {
+
+	first.Write([]byte("test"))
+	if match := first.Similarity(second); match != 0 {
 		t.Error("Similarity returned unexpected results:", match)
 	}
-	mh8x.Write([]byte("test"))
-	if match := mh8.Similarity(mh8x); match != 10 {
+	second.Write([]byte("test"))
+	if match := first.Similarity(second); match != 10 {
 		t.Error("Similarity returned unexpected results:", match)
 	}
-	mh8x.Write([]byte("other thing"))
-	if match := mh8.Similarity(mh8x); match == 10 || match == 0 {
+	second.Write([]byte("other thing"))
+	if match := first.Similarity(second); match == 10 || match == 0 {
 		t.Error("Similarity returned unexpected results:", match)
 	}
 }
